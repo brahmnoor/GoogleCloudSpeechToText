@@ -1,0 +1,19 @@
+{
+  "name": "GoogleCloudSpeechPlayground",
+  "version": "1.0.0",
+  "description": "Google Cloud Speech Playground with node.js and socket.io.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/speech": "1.5.0",
+    "dotenv": "^4.0.0",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "path": "^0.12.7",
+    "socket.io": "^2.0.4"
+  }
+}
