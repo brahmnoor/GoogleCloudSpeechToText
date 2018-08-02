@@ -1,10 +1,11 @@
 'use strict'
 
+// Setting the requirements for the app to function properly
 const express = require('express'); // const bodyParser = require('body-parser'); // const path = require('path');
 const fs = require('fs');
 const environmentVars = require('dotenv').config();
 
-// Google Cloud
+// Loading the Google Cloud Speech API
 const speech = require('@google-cloud/speech');
 const speechClient = new speech.SpeechClient(); // Creates a client
 
@@ -13,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 1337;
 const server = require('http').createServer(app);
 
-const io = require('socket.io')(server);
+const io = require('socket.io')(server); // Connecting with Socket IO
 
 app.use('/assets', express.static(__dirname + '/public'));
 app.use('/session/assets', express.static(__dirname + '/public'));
@@ -61,6 +62,7 @@ io.on('connection', function (client) {
     });
 
     function startRecognitionStream(client, data) {
+        // Getting the results from Google Cloud API
         recognizeStream = speechClient.streamingRecognize(request)
             .on('error', console.error)
             .on('data', (data) => {

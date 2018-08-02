@@ -31,11 +31,15 @@ const constraints = {
 
 
 function initRecording() {
-	socket.emit('startGoogleCloudStream', ''); //init socket Google Speech Connection
+	// Initialize recording of the audio stream
+
+	socket.emit('startGoogleCloudStream', ''); // init socket Google Speech Connection
 	streamStreaming = true;
+
+	// Setting up the browser side scripts for recording of audio
 	AudioContext = window.AudioContext || window.webkitAudioContext;
 	context = new AudioContext();
-	processor = context.createScriptProcessor(bufferSize, 1, 1);
+	processor = context.createScriptProcessor(bufferSize, 1, 1); // Setting the buffersize of the recorded audio for real-time feedback
 	processor.connect(context.destination);
 	context.resume();
 
@@ -52,11 +56,13 @@ function initRecording() {
 	navigator.mediaDevices.getUserMedia(constraints)
 		.then(handleSuccess);
 
+
 }
 
 function microphoneProcess(e) {
 	var left = e.inputBuffer.getChannelData(0);
 	var left16 = convertFloat32ToInt16(left);
+	// The input audio data is in float 32 format, but we need int 16 for Google Cloud API
 	socket.emit('binaryData', left16);
 }
 
@@ -64,7 +70,7 @@ function microphoneProcess(e) {
 
 
 //================= INTERFACE =================
-var startButton = document.getElementById("startRecButton");
+var startButton = document.getElementById("startRecButton"); // Connecting the HTML element
 startButton.addEventListener("click", startRecording);
 
 var endButton = document.getElementById("stopRecButton");
@@ -90,6 +96,7 @@ function stopRecording() {
 	let track = globalStream.getTracks()[0];
 	track.stop();
 
+	// Stoping the audio context from recording more buffer
 	input.disconnect(processor);
 	processor.disconnect(context.destination);
 	context.close().then(function () {
@@ -126,7 +133,7 @@ socket.on('messages', function (data) {
 	console.log(data);
 });
 
-
+// Using Socket IO to receive the feedback from the server and then appending it to our results div
 socket.on('speechData', function (data) {
 	// console.log(data.results[0].alternatives[0].transcript);
 	var dataFinal = undefined || data.results[0].isFinal;
